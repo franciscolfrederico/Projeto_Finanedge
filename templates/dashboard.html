@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="dash-wrap">
+  <div class="dash-card">
+    <h2>Olá, {{ u.nome }} 👋</h2>
+    <p>Você entrou como: <strong>{{ u.role }}</strong></p>
+    <p>Email: <code>{{ u.email }}</code></p>
+
+    <form method="POST" action="{{ url_for('logout') }}">
+      <button class="secondary-btn" type="submit">Sair</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
