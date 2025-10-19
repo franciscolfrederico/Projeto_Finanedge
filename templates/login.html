@@ -1,8 +1,35 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="bg-waves">
-  <div class="login-card">
-    <div class="logo">
+<!-- Container com fundo que troca entre light/dark -->
+<div class="bg-waves min-h-screen flex items-start justify-center py-12">
+
+  <!-- Card de login (posicionamento relativo p/ colocar o toggle dentro) -->
+  <div class="login-card relative mx-auto w-full max-w-lg
+              bg-white/85 dark:bg-slate-900/85 backdrop-blur
+              border border-slate-200 dark:border-slate-700
+              text-slate-900 dark:text-slate-100
+              rounded-3xl p-8 shadow-xl">
+
+    <!-- Toggle de tema — pílula com bolinha (dentro do card, canto sup. direito) -->
+    <div class="absolute -top-6 -right-6 z-[9999]">
+      <button id="theme-toggle" type="button" aria-label="Alternar tema claro/escuro"
+        class="relative h-8 w-16 rounded-full border border-slate-500/40
+               bg-slate-300 dark:bg-slate-700 shadow-inner transition-colors">
+        <!-- knob -->
+        <span id="theme-knob"
+          class="absolute top-1 left-1 h-6 w-6 rounded-full bg-white shadow-md
+                 grid place-items-center transition-transform duration-300 ease-out
+                 translate-x-0">
+          <!-- lua dentro do knob -->
+          <svg class="h-4 w-4" viewBox="0 0 20 20" fill="#FACC15" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+          </svg>
+        </span>
+      </button>
+    </div>
+
+    <!-- Logo -->
+    <div class="logo flex items-center justify-center mb-4">
       <svg viewBox="0 0 24 24" width="56" height="56" aria-hidden="true">
         <path fill="#3b82f6" d="M19.14,12.94a7.14,7.14,0,1,1-7.14-7.14A7.14,7.14,0,0,1,19.14,12.94Z"/>
         <circle cx="12" cy="10" r="2" fill="#0b1020"/>
@@ -10,51 +37,101 @@
       </svg>
     </div>
 
-    <h1 class="title">Bem-vindo de volta</h1>
-    <p class="subtitle">Faça login para continuar gerenciando seus projetos.</p>
+    <h1 class="title text-3xl font-bold text-center">Bem-vindo de volta</h1>
+    <p class="subtitle text-center text-slate-600 dark:text-slate-300 mb-6">
+      Faça login para continuar gerenciando seus projetos.
+    </p>
 
-    <form method="POST" action="{{ url_for('login') }}" class="form">
+    <form method="POST" action="{{ url_for('login') }}" class="form space-y-4">
       <input type="hidden" name="role" id="role" value="Equipe">
 
-      <div class="role-switch">
-        <button type="button" class="role-btn active" data-role="Equipe">Equipe</button>
-        <button type="button" class="role-btn" data-role="Empresa">Empresa</button>
+      <!-- Alternância Equipe/Empresa -->
+      <div class="role-switch grid grid-cols-2 gap-2 mb-4">
+        <button type="button" class="role-btn active rounded-full py-2 font-medium
+                bg-blue-600 text-white shadow hover:opacity-95 transition"
+                data-role="Equipe">Equipe</button>
+        <button type="button" class="role-btn rounded-full py-2 font-medium
+                bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-100
+                hover:opacity-95 transition"
+                data-role="Empresa">Empresa</button>
       </div>
 
-      <label class="label">Email</label>
-      <div class="input-group">
-        <input type="text" name="email" placeholder="ict_user" value="ict_user" required>
-        <span class="right-icon" title="Email">&#128273;</span>
+      <!-- Email -->
+      <label class="label block text-sm font-semibold">Email</label>
+      <div class="input-group relative">
+        <input type="text" name="email" placeholder="ict_user" value="ict_user" required
+          class="w-full rounded-xl border border-slate-300 dark:border-slate-700
+                 bg-white dark:bg-slate-800 px-3 py-2 pr-9
+                 text-slate-900 dark:text-slate-100 outline-none focus:ring-2 focus:ring-blue-500">
+        <span class="right-icon absolute inset-y-0 right-3 flex items-center text-slate-500"
+              title="Email">&#128273;</span>
       </div>
 
-      <label class="label">Senha</label>
-      <div class="input-group">
-        <input id="pwd" type="password" name="password" placeholder="••••" required>
-        <button type="button" class="icon-btn" id="togglePwd" aria-label="Mostrar/ocultar senha" title="Mostrar/ocultar senha">👁️</button>
+      <!-- Senha -->
+      <label class="label block text-sm font-semibold">Senha</label>
+      <div class="input-group relative">
+        <input id="pwd" type="password" name="password" placeholder="••••" required
+          class="w-full rounded-xl border border-slate-300 dark:border-slate-700
+                 bg-white dark:bg-slate-800 px-3 py-2 pr-10
+                 text-slate-900 dark:text-slate-100 outline-none focus:ring-2 focus:ring-blue-500">
+        <button type="button" class="icon-btn absolute inset-y-0 right-2 px-2 text-lg"
+                id="togglePwd" aria-label="Mostrar/ocultar senha" title="Mostrar/ocultar senha">👁️</button>
       </div>
 
-      <button type="submit" class="primary-btn">Entrar</button>
+      <button type="submit"
+        class="primary-btn w-full rounded-xl bg-blue-600 hover:bg-blue-700
+               text-white font-semibold py-2 mt-2 shadow-lg transition">
+        Entrar
+      </button>
     </form>
   </div>
 </div>
 
+<!-- Scripts da página -->
 <script>
-  // alternância Equipe/Empresa
+  // Alternância Equipe/Empresa
   const roleInput = document.getElementById('role');
   const buttons = document.querySelectorAll('.role-btn');
   buttons.forEach(btn => {
     btn.addEventListener('click', () => {
-      buttons.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+      buttons.forEach(b => b.classList.remove('active','bg-blue-600','text-white'));
+      btn.classList.add('active','bg-blue-600','text-white');
       roleInput.value = btn.dataset.role;
     });
   });
 
-  // mostrar/ocultar senha
+  // Mostrar/ocultar senha
   const toggle = document.getElementById('togglePwd');
   const pwd = document.getElementById('pwd');
   toggle.addEventListener('click', () => {
     pwd.type = pwd.type === 'password' ? 'text' : 'password';
+  });
+</script>
+
+<!-- Script do tema claro/escuro com knob deslizante -->
+<script>
+  const themeToggleBtn = document.getElementById('theme-toggle');
+  const knob = document.getElementById('theme-knob');
+
+  // Inicializa usando localStorage ou preferência do sistema
+  (function initTheme(){
+    try {
+      const saved = localStorage.getItem('color-theme');
+      const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const isDark = saved ? saved === 'dark' : systemDark;
+
+      document.documentElement.classList.toggle('dark', isDark);
+      knob?.classList.toggle('translate-x-8', isDark);
+      knob?.classList.toggle('translate-x-0', !isDark);
+    } catch (e) {}
+  })();
+
+  // Alterna tema e posição do knob
+  themeToggleBtn?.addEventListener('click', function () {
+    const isDark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('color-theme', isDark ? 'dark' : 'light');
+    knob?.classList.toggle('translate-x-8', isDark);
+    knob?.classList.toggle('translate-x-0', !isDark);
   });
 </script>
 {% endblock %}

@@ -1,80 +1,197 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ================================
+   PALETA E TOKENS (LIGHT DEFAULT)
+   ================================ */
 :root{
-  --bg:#070b14;
-  --card:#0e1526;
-  --muted:#9aa3b2;
-  --text:#e7ecf3;
-  --primary:#2563eb;
-  --primary-700:#1d4ed8;
-  --error:#ef4444;
-  --success:#22c55e;
-  --radius:14px;
+  /* cores gerais */
+  --bg:            #f7f9fc;
+  --card:          #ffffff;
+  --text:          #0b1020;
+  --muted:         #64748b;
+
+  /* UI */
+  --border:        #e2e8f0;      /* slate-200 */
+  --chip-bg:       #e2e8f0;      /* para role-switch em light */
+  --input-bg:      #ffffff;
+  --input-border:  #cbd5e1;      /* slate-300 */
+
+  /* brand */
+  --primary:       #2563eb;      /* blue-600 */
+  --primary-700:   #1d4ed8;      /* blue-700 */
+
+  /* feedback */
+  --error:         #ef4444;
+  --success:       #22c55e;
+
+  --radius:        14px;
 }
-*{box-sizing:border-box}
-html,body{height:100%}
+
+/* ================================
+   PALETA (DARK) – ativa com html.dark
+   ================================ */
+html.dark{
+  --bg:            #070b14;
+  --card:          #0e1526;
+  --text:          #e7ecf3;
+  --muted:         #9aa3b2;
+
+  --border:        #1a2540;
+  --chip-bg:       #0b1222;
+  --input-bg:      #0b1222;
+  --input-border:  #1a2540;
+
+  --primary:       #2563eb;
+  --primary-700:   #1d4ed8;
+
+  --error:         #ef4444;
+  --success:       #22c55e;
+}
+
+/* =============
+   RESET / BASE
+   ============= */
+*{ box-sizing: border-box; }
+html,body{ height:100%; }
 body{
-  margin:0; background:var(--bg); color:var(--text);
-  font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial;
+  margin:0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial;
 }
+
+/* ==========================
+   FUNDO ONDULADO (bg-waves)
+   ========================== */
 .bg-waves{
-  min-height:100vh; display:flex; align-items:center; justify-content:center;
+  min-height:100vh;
+  display:flex; align-items:center; justify-content:center;
+}
+
+/* DARK - ondas escuras */
+html.dark .bg-waves{
   background:
     radial-gradient(60% 80% at 10% 10%, #0b1020 0%, transparent 70%),
     radial-gradient(60% 80% at 90% 20%, #0b1224 0%, transparent 70%),
     radial-gradient(70% 90% at 50% 100%, #0a0f1e 0%, transparent 70%),
     linear-gradient(160deg,#081021 0%, #081021 100%);
 }
-.login-card{
-  width: min(640px, 92vw); background:var(--card);
-  border:1px solid #18223a; border-radius:24px;
-  padding:42px 36px; box-shadow:0 20px 60px rgba(0,0,0,.4);
+
+/* LIGHT - ondas claras */
+html:not(.dark) .bg-waves{
+  background:
+    radial-gradient(60% 80% at 10% 10%, #dfe7ff 0%, transparent 70%),
+    radial-gradient(60% 80% at 90% 20%, #e8efff 0%, transparent 70%),
+    radial-gradient(70% 90% at 50% 100%, #edf2ff 0%, transparent 70%),
+    linear-gradient(160deg,#f7f9fc 0%, #eef2ff 100%);
 }
-.logo{display:flex;justify-content:center;margin-bottom:10px}
-.title{ text-align:center; font-weight:800; letter-spacing:.2px;
-  margin:0 0 6px 0; font-size: clamp(22px, 3.5vw, 36px);}
-.subtitle{ text-align:center; color:var(--muted); margin:0 0 26px 0; font-size:15px;}
-.form{display:flex;flex-direction:column;gap:14px}
+
+/* ====================
+   CARD / TIPOGRAFIA
+   ==================== */
+.login-card{
+  width: min(640px, 92vw);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 42px 36px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.15);
+}
+
+.logo{ display:flex; justify-content:center; margin-bottom:10px; }
+
+.title{
+  text-align:center; font-weight:800; letter-spacing:.2px;
+  margin:0 0 6px 0; font-size: clamp(22px, 3.5vw, 36px);
+}
+
+.subtitle{
+  text-align:center; color: var(--muted);
+  margin:0 0 26px 0; font-size:15px;
+}
+
+.form{ display:flex; flex-direction:column; gap:14px; }
+
+/* ====================
+   ROLE SWITCH (chips)
+   ==================== */
 .role-switch{
-  display:flex; gap:8px; background:#0b1222; padding:6px;
-  border-radius:999px; border:1px solid #1a2540; margin-bottom:8px;
+  display:flex; gap:8px;
+  background: var(--chip-bg);
+  padding:6px; border-radius:999px; border:1px solid var(--border);
+  margin-bottom:8px;
 }
 .role-btn{
   flex:1; padding:12px 10px; border-radius:999px; background:transparent;
-  color:var(--muted); border:none; font-weight:600; cursor:pointer;
+  color: var(--muted); border:none; font-weight:600; cursor:pointer;
 }
-.role-btn.active{ background:var(--primary); color:white; box-shadow:0 6px 20px rgba(37,99,235,.45);}
-.label{ font-size:14px; color:#cdd6e3; margin-top:4px; }
+.role-btn.active{
+  background: var(--primary); color:#fff;
+  box-shadow:0 6px 20px rgba(37,99,235,.45);
+}
+
+/* =============
+   INPUTS
+   ============= */
+.label{ font-size:14px; color: color-mix(in oklab, var(--text) 70%, #9ca3af); margin-top:4px; }
+
 .input-group{
   position:relative; display:flex; align-items:center;
-  background:#0b1222; border:1px solid #1a2540; border-radius:12px;
-  padding:4px 10px 4px 12px;
+  background: var(--input-bg);
+  border:1px solid var(--input-border);
+  border-radius:12px; padding:4px 10px 4px 12px;
 }
 .input-group input{
-  flex:1; background:transparent; border:none; color:var(--text);
+  flex:1; background:transparent; border:none; color: var(--text);
   padding:12px 8px; font-size:15px; outline:none;
 }
-.right-icon{ opacity:.7; font-size:16px;}
+.right-icon{ opacity:.7; font-size:16px; color: var(--muted); }
 .icon-btn{ background:transparent; border:none; cursor:pointer; font-size:18px; opacity:.8; }
+
+/* =============
+   BOTÕES
+   ============= */
 .primary-btn{
   margin-top:8px; width:100%; padding:14px 16px; border-radius:12px; border:none;
-  background:var(--primary); color:#fff; font-weight:800; font-size:16px;
+  background: var(--primary); color:#fff; font-weight:800; font-size:16px;
   cursor:pointer; box-shadow:0 12px 30px rgba(37,99,235,.35);
 }
-.primary-btn:hover{ background:var(--primary-700) }
+.primary-btn:hover{ background: var(--primary-700); }
+
+/* =============
+   FLASH MESSAGES
+   ============= */
 .flash-wrap{
   position:fixed; top:18px; left:50%; transform:translateX(-50%);
   display:flex; flex-direction:column; gap:8px; z-index:1000; width:min(520px,92vw);
 }
-.flash{ padding:12px 14px; border-radius:10px; font-weight:600;
-  background:#0f1a2f; border:1px solid #1a2540;}
-.flash.error{border-color:#3b1e24; background:#220d12; color:#ffb4b4}
-.flash.success{border-color:#10361f; background:#0b1e13; color:#b9f3c7}
+.flash{
+  padding:12px 14px; border-radius:10px; font-weight:600;
+  background: color-mix(in oklab, var(--card) 88%, #0f172a);
+  border:1px solid var(--border);
+}
+.flash.error{ border-color:#3b1e24; background:#220d12; color:#ffb4b4; }
+.flash.success{ border-color:#10361f; background:#0b1e13; color:#b9f3c7; }
+
+/* =============
+   DASHBOARD
+   ============= */
 .dash-wrap{ min-height:100vh; display:flex; align-items:center; justify-content:center; }
 .dash-card{
-  background:var(--card); border:1px solid #18223a; border-radius:24px;
-  padding:28px 26px; width:min(720px,92vw); box-shadow:0 20px 60px rgba(0,0,0,.4);
+  background: var(--card); border:1px solid var(--border); border-radius:24px;
+  padding:28px 26px; width:min(720px,92vw); box-shadow:0 20px 60px rgba(0,0,0,.2);
 }
+
+/* =============
+   SECUNDÁRIO
+   ============= */
 .secondary-btn{
-  margin-top:18px; background:transparent; border:1px solid #2b3a60;
-  color:#cfd8e6; padding:10px 14px; border-radius:10px; cursor:pointer;
+  margin-top:18px; background:transparent; border:1px solid var(--border);
+  color: color-mix(in oklab, var(--text) 85%, var(--muted));
+  padding:10px 14px; border-radius:10px; cursor:pointer;
 }
-.secondary-btn:hover{ background:#0e1730 }
+.secondary-btn:hover{
+  background: color-mix(in oklab, var(--card) 80%, var(--bg));
+}

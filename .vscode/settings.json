@@ -1,0 +1,15 @@
+{
+  // 1) não reclame do @tailwind
+  "css.lint.unknownAtRules": "ignore",
+
+  // 2) deixa o VS Code entender melhor Tailwind nas CSS
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+
+  // 3) extensão do Tailwind (se instalada) reconhece as classes
+  "tailwindCSS.includeLanguages": {
+    "css": "css",
+    "html": "html"
+  }
+}

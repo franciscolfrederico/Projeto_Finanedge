@@ -1,2 +1,6 @@
 # api/index.py
-from app import app as app  # a Vercel procura uma variável chamada "app"
+from app import app  # o objeto Flask no app.py deve se chamar "app"
+
+import sys
+def handler(request):
+    return {"statusCode": 200, "headers": {"Content-Type": "text/plain"}, "body": sys.version}
