@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from datetime import timedelta
 
+
 app = Flask(__name__)
 app.secret_key = "troque-por-uma-chave-segura"
 app.permanent_session_lifetime = timedelta(hours=8)
