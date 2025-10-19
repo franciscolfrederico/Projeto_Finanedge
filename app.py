@@ -12,11 +12,19 @@ USERS = {
     "empresa_user": {"password": "abcd", "nome": "Usuário Empresa"}
 }
 
+
+
 @app.route("/", methods=["GET"])
 def index():
     if "user" in session:
         return redirect(url_for("dashboard"))
     return render_template("login.html")
+
+
+
+@app.route("/")
+def home():
+    return render_template("login.html")  # seu template
 
 @app.route("/login", methods=["POST"])
 def login():

@@ -1,24 +1,32 @@
 # api/index.py
-from app import app
-from werkzeug.wrappers import Request, Response
 import traceback
+from werkzeug.wrappers import Request, Response
 
 def handler(request):
-    """Adapta a request do Vercel para o WSGI do Flask com logs de erro."""
+    # 1) Tenta importar o Flask app e captura erros de import (acontecem antes da resposta)
+    try:
+        from app import app  # precisa existir app.py na raiz com objeto "app"
+    except Exception:
+        tb = traceback.format_exc()
+        print("=== IMPORT_ERROR ===\n", tb, flush=True)  # aparece em /_logs
+        return Response(
+            "Import error:\n\n" + tb,
+            status=500,
+            content_type="text/plain; charset=utf-8",
+        )
+
+    # 2) Se importou, adapta a request para WSGI e captura erros de execução
     @Request.application
     def application(req):
         try:
-            # Encaminha a requisição para o WSGI do Flask
             return app.wsgi_app(req.environ, lambda *a, **k: None)
         except Exception:
-            # LOGA nos logs do Vercel (stdout/stderr)
-            traceback.print_exc()
-            # (temporário) devolve o stack trace para conseguirmos ver a causa no browser
+            tb = traceback.format_exc()
+            print("=== RUNTIME_ERROR ===\n", tb, flush=True)
             return Response(
-                "Internal error:\n\n" + traceback.format_exc(),
+                "Runtime error:\n\n" + tb,
                 status=500,
                 content_type="text/plain; charset=utf-8",
             )
+
     return application(request)
-
-
