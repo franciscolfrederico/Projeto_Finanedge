@@ -1,6 +1,15 @@
-# api/index.py
-from app import app  # o objeto Flask no app.py deve se chamar "app"
+from app import app  # importa o Flask app principal
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
+from werkzeug.wrappers import Request, Response
 
-import sys
 def handler(request):
-    return {"statusCode": 200, "headers": {"Content-Type": "text/plain"}, "body": sys.version}
+    """Função compatível com Vercel (Serverless)"""
+    # O Vercel passa a request como objeto semelhante ao WSGI
+    @Request.application
+    def application(req):
+        # Encaminha a requisição para o Flask app
+        return app.wsgi_app(req.environ, lambda *a, **k: None)
+    
+    return application(request)
+
+

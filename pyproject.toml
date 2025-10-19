@@ -2,3 +2,11 @@
 name = "projeto-finanedge"
 version = "0.1.0"
 requires-python = ">=3.11"
+dependencies = [
+  "Flask>=3.0,<4",
+  "Werkzeug>=3.0,<4"
+]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
