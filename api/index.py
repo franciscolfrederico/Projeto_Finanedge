@@ -1,32 +1,28 @@
 # api/index.py
-import traceback
-from werkzeug.wrappers import Request, Response
+from app import app
+from werkzeug.wrappers import Response
 
 def handler(request):
-    # 1) Tenta importar o Flask app e captura erros de import (acontecem antes da resposta)
+    """
+    Adapta a request do Vercel (semelhante a WSGI) para o Flask WSGI app.
+    Retorna um werkzeug.wrappers.Response.
+    """
+    # 'status' e 'headers' serão preenchidos pelo Flask via start_response
+    status_holder = {"status": "500 INTERNAL SERVER ERROR"}
+    headers_holder = {"headers": []}
+
+    def start_response(status, headers, exc_info=None):
+        status_holder["status"] = status
+        headers_holder["headers"] = headers
+
+    # Chama o WSGI app do Flask com o environ da request do Vercel
+    result_iterable = app.wsgi_app(request.environ, start_response)
+
+    # Concatena o corpo (o Vercel espera um corpo pronto, não um iterável WSGI)
+    body = b"".join(result_iterable)
     try:
-        from app import app  # precisa existir app.py na raiz com objeto "app"
+        status_code = int(status_holder["status"].split(" ", 1)[0])
     except Exception:
-        tb = traceback.format_exc()
-        print("=== IMPORT_ERROR ===\n", tb, flush=True)  # aparece em /_logs
-        return Response(
-            "Import error:\n\n" + tb,
-            status=500,
-            content_type="text/plain; charset=utf-8",
-        )
+        status_code = 500
 
-    # 2) Se importou, adapta a request para WSGI e captura erros de execução
-    @Request.application
-    def application(req):
-        try:
-            return app.wsgi_app(req.environ, lambda *a, **k: None)
-        except Exception:
-            tb = traceback.format_exc()
-            print("=== RUNTIME_ERROR ===\n", tb, flush=True)
-            return Response(
-                "Runtime error:\n\n" + tb,
-                status=500,
-                content_type="text/plain; charset=utf-8",
-            )
-
-    return application(request)
+    return Response(body, status=status_code, headers=headers_holder["headers"])
